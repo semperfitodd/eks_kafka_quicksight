@@ -15,22 +15,16 @@ spec:
         kraft:
           enabled: true
         service:
-          annotations:
-            service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-            service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
-            service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "IP"
-            external-dns.alpha.kubernetes.io/hostname: "kafka-gameday.brewsentry.com"
-            external-dns.alpha.kubernetes.io/ttl: "60"
           replicaCount: 3
-        externalAccess:
-          service:
-            type: LoadBalancer
-            ports:
-              external: 9094
-          enabled: true
-          autoDiscovery:
-            enabled: true
-        enabled: true
+{{/*        externalAccess:*/}}
+{{/*          service:*/}}
+{{/*            type: LoadBalancer*/}}
+{{/*            ports:*/}}
+{{/*              external: 9094*/}}
+{{/*          enabled: true*/}}
+{{/*          autoDiscovery:*/}}
+{{/*            enabled: true*/}}
+{{/*        enabled: true*/}}
         rbac:
           create: true
         fullnameOverride: "kafka"
@@ -64,11 +58,11 @@ spec:
             protocol: PLAINTEXT
             name: INTERNAL
             sslClientAuth: ""
-          external:
-            containerPort: 9095
-            protocol: PLAINTEXT
-            name: EXTERNAL
-            sslClientAuth: ""
+{{/*          external:*/}}
+{{/*            containerPort: 9095*/}}
+{{/*            protocol: PLAINTEXT*/}}
+{{/*            name: EXTERNAL*/}}
+{{/*            sslClientAuth: ""*/}}
         kraft:
           enabled: true
         zookeeper:

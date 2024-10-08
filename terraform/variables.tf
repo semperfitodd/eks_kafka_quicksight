@@ -2,6 +2,13 @@ locals {
   environment = replace(var.environment, "_", "-")
 }
 
+variable "domain" {
+  description = "The domain to host the system service"
+  type        = string
+
+  default = ""
+}
+
 variable "eks_cluster_version" {
   description = "Version of kubernetes running on cluster"
   type        = string

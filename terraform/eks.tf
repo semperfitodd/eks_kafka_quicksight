@@ -77,7 +77,7 @@ module "eks" {
 
       min_size     = 1
       max_size     = 3
-      desired_size = 1
+      desired_size = 2
 
       use_latest_ami_release_version = true
 

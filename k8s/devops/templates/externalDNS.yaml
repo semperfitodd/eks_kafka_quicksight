@@ -29,9 +29,9 @@ spec:
         - name: serviceAccount.create
           value: 'true'
         - name: policy
-          value: sync
+          value: upsert-only
         - name: serviceAccount.annotations.eks\.amazonaws\.com/role-arn
-          value: arn:aws:iam::{{ .Values.awsAccountNumber }}:role/AmazonEKSRoute53ExternalDNS
+          value: arn:aws:iam::{{ .Values.awsAccountNumber }}:role/eks_kafka_quicksight_AmazonEKSRoute53ExternalDNS
     repoURL: https://charts.bitnami.com/bitnami
     targetRevision: 7.5.5
   syncPolicy:

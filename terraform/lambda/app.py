@@ -2,6 +2,7 @@ import json
 import boto3
 import logging
 import os
+from decimal import Decimal
 
 # Set up logging
 logger = logging.getLogger()
@@ -11,7 +12,7 @@ logger.setLevel(logging.INFO)
 sagemaker_runtime = boto3.client('sagemaker-runtime')
 dynamodb = boto3.resource('dynamodb')
 
-# Fetch the SageMaker endpoint name from environment variables
+# Fetch the SageMaker endpoint name and DynamoDB table name from environment variables
 SAGEMAKER_ENDPOINT = os.environ['SAGEMAKER_ENDPOINT']
 DYNAMO_TABLE_NAME = os.environ['DYNAMO_TABLE_NAME']
 
@@ -39,25 +40,28 @@ def store_log_to_dynamo(log_message, rcf_score):
         # Get the DynamoDB table
         table = dynamodb.Table(DYNAMO_TABLE_NAME)
 
-        # Prepare the log entry with the RCF score
+        # Prepare the log entry with the RCF score (convert floats to Decimal)
         log_entry = {
             'log_identifier': log_message['log_identifier'],
-            'timestamp': log_message['timestamp'],
+            'timestamp': Decimal(str(log_message['timestamp'])),
             'log_level': log_message['log_level'],
             'ip_address': log_message['ip_address'],
             'user_id': log_message['user_id'],
             'method': log_message['method'],
             'path': log_message['path'],
             'status_code': log_message['status_code'],
-            'response_time': log_message['response_time'],
+            'response_time': Decimal(str(log_message['response_time'])),
             'message': log_message['message'],
-            'rcf_score': rcf_score
+            'rcf_score': Decimal(str(rcf_score))  # Store exact score as Decimal
         }
+
+        # Log the log_entry being written to DynamoDB
+        logger.info(f"Log entry being written to DynamoDB: {log_entry}")
 
         # Write to DynamoDB
         table.put_item(Item=log_entry)
 
-        logger.info(f"Log written to DynamoDB: {log_entry}")
+        logger.info("Log successfully written to DynamoDB")
 
     except Exception as e:
         logger.error(f"Error writing to DynamoDB: {str(e)}")
@@ -86,9 +90,10 @@ def lambda_handler(event, context):
         # Log SageMaker response for debugging
         logger.info(f'SageMaker Response: {response}')
 
-        # Parse and return response from SageMaker
+        # Parse the response from SageMaker
         result = json.loads(response['Body'].read().decode())
-        rcf_score = result.get('score', 0)  # Assume RCF returns 'score' field
+        logger.info(f"Parsed SageMaker result: {result}")
+        rcf_score = result['scores'][0]['score']  # Extract exact score
 
         # Write log to DynamoDB with the RCF score
         store_log_to_dynamo(log_message, rcf_score)

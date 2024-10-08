@@ -12,16 +12,16 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/backend-protocol: HTTP
     alb.ingress.kubernetes.io/target-group-attributes: stickiness.enabled=false
-    external-dns.alpha.kubernetes.io/hostname: argocd-dreamcanvas.brewsentry.com
+    external-dns.alpha.kubernetes.io/hostname: argocd-gameday.brewsentry.com
 spec:
   rules:
-    - host: argocd-dreamcanvas.brewsentry.com
+    - host: argocd-gameday.brewsentry.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: argocd-server
+                name: argo-cd-argocd-server
                 port:
                   number: 80

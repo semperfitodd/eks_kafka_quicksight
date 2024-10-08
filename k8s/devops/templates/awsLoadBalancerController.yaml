@@ -17,7 +17,7 @@ spec:
         clusterName: {{ .Values.clusterName }}
         serviceAccount:
           annotations:
-            eks.amazonaws.com/role-arn: arn:aws:iam::{{ .Values.awsAccountNumber }}:role/AmazonEKSLoadBalancerController
+            eks.amazonaws.com/role-arn: arn:aws:iam::{{ .Values.awsAccountNumber }}:role/eks_kafka_quicksight_AmazonEKSLoadBalancerController
   syncPolicy:
     automated:
       prune: true

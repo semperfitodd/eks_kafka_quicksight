@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "log_analysis_table" {
-  name         = "log_analysis"
+  name         = var.environment
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "log_identifier"
   range_key    = "timestamp"

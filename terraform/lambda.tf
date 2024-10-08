@@ -2,7 +2,7 @@ module "lambda_function_sagemaker" {
   source = "terraform-aws-modules/lambda/aws"
 
   function_name = var.environment
-  description   = "${local.environment} function to authorize api gateway"
+  description   = "${local.environment} clean and record logs"
   handler       = "app.lambda_handler"
   publish       = true
   runtime       = "python3.11"
@@ -35,6 +35,13 @@ module "lambda_function_sagemaker" {
         "dynamodb:GetItem",
       ]
       resources = [aws_dynamodb_table.log_analysis_table.arn]
+    }
+    sagemaker = {
+      effect = "Allow",
+      actions = [
+        "sagemaker:InvokeEndpoint"
+      ]
+      resources = ["*"]
     }
   }
 

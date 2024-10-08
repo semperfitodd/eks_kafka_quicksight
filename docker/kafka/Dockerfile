@@ -7,7 +7,7 @@ WORKDIR /app
 COPY producer.py /app/
 
 # Install Kafka Python client library
-RUN pip install confluent-kafka faker
+RUN pip install boto3 confluent-kafka faker
 
 # Run the Python Kafka producer script
 CMD ["python", "producer.py"]
