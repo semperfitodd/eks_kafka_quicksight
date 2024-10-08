@@ -1,0 +1,51 @@
+{{ range $environment, $values := .Values.appEnvironments }}
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: kafka
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  description: "Project for Kafka"
+  destinations:
+    - namespace: '*'
+      server: https://kubernetes.default.svc
+  sourceRepos:
+    - https://charts.bitnami.com/bitnami
+    - {{ $values.repoUrl }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kafka-master
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: kafka
+  source:
+    path: k8s/kafka
+    repoURL: {{ $values.repoUrl }}
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
+      {{- with $values }}
+      values: |- {{ toYaml . | nindent 8 }}
+      {{- end }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 2
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+{{ end }}

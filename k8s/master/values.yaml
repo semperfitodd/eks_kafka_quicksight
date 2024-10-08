@@ -1,0 +1,11 @@
+global:
+  awsAccountNumber: '704855531002'
+
+appEnvironments:
+  dev:
+    argoHostname: argocd-gameday.brewsentry.com
+    awsAccountNumber: '704855531002'
+    clusterName: dreamcanvas_dev
+    publicDomain: brewsentry.com
+    publicDomainId: Z02805682TXYB0368277R
+    repoUrl: https://github.com/semperfitodd/eks_kafka_quicksight

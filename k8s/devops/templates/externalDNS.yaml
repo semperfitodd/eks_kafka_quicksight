@@ -1,0 +1,46 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns
+  namespace: argocd
+spec:
+  destination:
+    namespace: kube-system
+    server: https://kubernetes.default.svc
+  project: devops
+  source:
+    chart: external-dns
+    helm:
+      parameters:
+        - name: domainFilters[0]
+          value: {{ .Values.publicDomain }}
+        - name: provider
+          value: aws
+        - name: aws-zone-type
+          value: public
+        - name: registry
+          value: txt
+        - name: txt-owner-id
+          value: {{ .Values.publicDomainId }}
+        - name: rbac.create
+          value: 'true'
+        - name: rbac.serviceAccountName
+          value: external-dns
+        - name: serviceAccount.create
+          value: 'true'
+        - name: policy
+          value: sync
+        - name: serviceAccount.annotations.eks\.amazonaws\.com/role-arn
+          value: arn:aws:iam::{{ .Values.awsAccountNumber }}:role/AmazonEKSRoute53ExternalDNS
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 7.5.5
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 2
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s

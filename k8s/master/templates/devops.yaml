@@ -1,0 +1,55 @@
+{{ range $environment, $values := .Values.appEnvironments }}
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: devops
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  description: "Project for DevOps"
+  destinations:
+    - namespace: '*'
+      server: https://kubernetes.default.svc
+  sourceRepos:
+    - https://argoproj.github.io/argo-helm
+    - https://aws.github.io/eks-charts
+    - https://charts.bitnami.com/bitnami
+    - https://charts.jetstack.io/
+    - https://nvidia.github.io/k8s-device-plugin
+    - {{ $values.repoUrl }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: devops-master
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: devops
+  source:
+    path: k8s/devops
+    repoURL: {{ $values.repoUrl }}
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
+      {{- with $values }}
+      values: |- {{ toYaml . | nindent 8 }}
+      {{- end }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 2
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+{{ end }}

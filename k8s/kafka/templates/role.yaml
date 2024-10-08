@@ -1,0 +1,22 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: kafka-consumer-role
+  namespace: kafka
+rules:
+- apiGroups:
+  - ''
+  resourceAttributes:
+    matchLabels:
+      kafka: consumer
+  resourceNames: []
+  resources:
+  - pods
+  - pods/log
+  - pods/attach
+  verbs:
+  - create
+  - get
+  - watch
+  - list
+  - delete
