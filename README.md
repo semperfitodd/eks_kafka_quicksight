@@ -90,8 +90,10 @@ The Lambda function processes each log received from Kafka, scores it using the 
 Connect QuickSight to DynamoDB and create a dashboard to visualize the log data and detect anomalies.
 
 ## Architecture Diagram
+![architecture.png](images/architecture.png)
 
 ## QuickSight Dashboard Example
+![quicksight.png](images/quicksight.png)
 
 ## Conclusion
 This project showcases a complete log-processing pipeline using AWS managed services such as EKS, Lambda, SageMaker, and QuickSight. The solution allows you to process and visualize logs in real time, with anomaly detection powered by machine learning.
