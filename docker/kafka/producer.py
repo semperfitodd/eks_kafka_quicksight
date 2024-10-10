@@ -4,6 +4,10 @@ import time
 import random
 from faker import Faker
 import boto3
+import logging
+
+# Configure logging to only output the specific JSON log message
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 # Lambda client setup
 lambda_client = boto3.client('lambda')
@@ -56,8 +60,7 @@ def invoke_lambda(log_message):
             Payload=json.dumps(lambda_payload)
         )
     except:
-        # Suppress all errors silently
-        pass
+        pass  # Suppress all errors
 
 
 def produce_message():
@@ -69,18 +72,17 @@ def produce_message():
     }
     message_json = json.dumps(message_with_markers)
 
+    # Output only the JSON log message to logging
+    logging.info(message_json)
+
     try:
-        # Output the JSON log
-        print(message_json)
         producer.produce('gameday', key=str(message['timestamp']), value=message_json)
+        producer.flush()  # Ensure the message is sent immediately
 
         # Invoke Lambda for every message
         invoke_lambda(message)
-
-        producer.flush()
     except:
-        # Suppress all errors silently
-        pass
+        pass  # Suppress all errors silently
 
 
 if __name__ == "__main__":

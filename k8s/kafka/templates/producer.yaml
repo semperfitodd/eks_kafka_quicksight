@@ -15,7 +15,7 @@ spec:
   serviceAccountName: kafka-producer-sa
   containers:
   - name: kafka-python-producer
-    image: {{ .Values.awsAccountNumber }}.dkr.ecr.us-east-1.amazonaws.com/eks_kafka_quicksight:4
+    image: {{ .Values.awsAccountNumber }}.dkr.ecr.us-east-1.amazonaws.com/eks_kafka_quicksight:5
     imagePullPolicy: Always
     env:
       - name: KAFKA_BROKER
