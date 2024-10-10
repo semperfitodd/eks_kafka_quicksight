@@ -4,10 +4,6 @@ import time
 import random
 from faker import Faker
 import boto3
-import logging
-
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Lambda client setup
 lambda_client = boto3.client('lambda')
@@ -54,15 +50,14 @@ def invoke_lambda(log_message):
         "log_message": log_message
     }
     try:
-        logging.info(f"Invoking Lambda with payload: {lambda_payload}")
-        response = lambda_client.invoke(
+        lambda_client.invoke(
             FunctionName=LAMBDA_FUNCTION_NAME,
-            InvocationType='Event',  # Event is async, so response may not be immediate
+            InvocationType='Event',
             Payload=json.dumps(lambda_payload)
         )
-        logging.info(f"Lambda invocation response: {response}")
-    except Exception as e:
-        logging.error(f"Error invoking Lambda: {e}")
+    except:
+        # Suppress all errors silently
+        pass
 
 
 def produce_message():
@@ -75,15 +70,17 @@ def produce_message():
     message_json = json.dumps(message_with_markers)
 
     try:
-        logging.info(f"Producing message to Kafka topic 'gameday': {message_json}")
+        # Output the JSON log
+        print(message_json)
         producer.produce('gameday', key=str(message['timestamp']), value=message_json)
 
         # Invoke Lambda for every message
         invoke_lambda(message)
 
         producer.flush()
-    except Exception as e:
-        logging.error(f"Error producing message to Kafka or invoking Lambda: {e}")
+    except:
+        # Suppress all errors silently
+        pass
 
 
 if __name__ == "__main__":
@@ -92,4 +89,4 @@ if __name__ == "__main__":
             produce_message()
             time.sleep(random.uniform(1, 30))  # Random sleep between 1 and 30 seconds
     except KeyboardInterrupt:
-        logging.info("Process interrupted by user.")
+        pass  # Suppress interruption output
