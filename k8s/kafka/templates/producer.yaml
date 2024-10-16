@@ -5,22 +5,22 @@ metadata:
   namespace: kafka
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::{{ .Values.awsAccountNumber }}:role/eks_kafka_quicksight_kafka_irsa
-{{/*---*/}}
-{{/*apiVersion: v1*/}}
-{{/*kind: Pod*/}}
-{{/*metadata:*/}}
-{{/*  name: kafka-python-producer*/}}
-{{/*  namespace: kafka*/}}
-{{/*spec:*/}}
-{{/*  serviceAccountName: kafka-producer-sa*/}}
-{{/*  containers:*/}}
-{{/*  - name: kafka-python-producer*/}}
-{{/*    image: {{ .Values.awsAccountNumber }}.dkr.ecr.us-east-1.amazonaws.com/eks_kafka_quicksight:5*/}}
-{{/*    imagePullPolicy: Always*/}}
-{{/*    env:*/}}
-{{/*      - name: KAFKA_BROKER*/}}
-{{/*        value: "kafka:9092"*/}}
-{{/*    resources:*/}}
-{{/*      limits:*/}}
-{{/*        memory: "256Mi"*/}}
-{{/*        cpu: "500m"*/}}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kafka-python-producer
+  namespace: kafka
+spec:
+  serviceAccountName: kafka-producer-sa
+  containers:
+  - name: kafka-python-producer
+    image: {{ .Values.awsAccountNumber }}.dkr.ecr.us-east-1.amazonaws.com/eks_kafka_quicksight:5
+    imagePullPolicy: Always
+    env:
+      - name: KAFKA_BROKER
+        value: "kafka:9092"
+    resources:
+      limits:
+        memory: "256Mi"
+        cpu: "500m"

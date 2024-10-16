@@ -41,15 +41,6 @@ module "app_s3_bucket" {
     }
   }
 
-  lifecycle_rule = [{
-    id      = "expire-objects"
-    enabled = true
-
-    expiration = {
-      days = 1
-    }
-  }]
-
   tags = var.tags
 }
 
