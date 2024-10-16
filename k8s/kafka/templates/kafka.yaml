@@ -15,16 +15,7 @@ spec:
         kraft:
           enabled: true
         service:
-          replicaCount: 3
-{{/*        externalAccess:*/}}
-{{/*          service:*/}}
-{{/*            type: LoadBalancer*/}}
-{{/*            ports:*/}}
-{{/*              external: 9094*/}}
-{{/*          enabled: true*/}}
-{{/*          autoDiscovery:*/}}
-{{/*            enabled: true*/}}
-{{/*        enabled: true*/}}
+          replicaCount: 2
         rbac:
           create: true
         fullnameOverride: "kafka"
@@ -58,11 +49,6 @@ spec:
             protocol: PLAINTEXT
             name: INTERNAL
             sslClientAuth: ""
-{{/*          external:*/}}
-{{/*            containerPort: 9095*/}}
-{{/*            protocol: PLAINTEXT*/}}
-{{/*            name: EXTERNAL*/}}
-{{/*            sslClientAuth: ""*/}}
         kraft:
           enabled: true
         zookeeper:
