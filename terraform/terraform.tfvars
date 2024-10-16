@@ -2,7 +2,7 @@ domain = "brewsentry.com"
 
 eks_cluster_version = "1.31"
 
-eks_node_instance_type = "t3.large"
+eks_node_instance_type = "m5.xlarge"
 
 environment = "eks_kafka_quicksight"
 
